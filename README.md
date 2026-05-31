@@ -14,9 +14,9 @@ Quick Note 是一个用于学习和实践桌面应用开发的本地笔记项目
 
 ## 当前阶段
 
-阶段 1：GitHub 与项目管理。
+阶段 2：环境准备与项目初始化。
 
-当前重点是建立 Git / GitHub 工作流，提交学习计划文档，并创建后续阶段的 GitHub issues。
+当前重点是跑通一个 Tauri + React + TypeScript 桌面空应用，还不实现笔记功能。
 
 ## 技术栈计划
 
@@ -26,6 +26,31 @@ Quick Note 是一个用于学习和实践桌面应用开发的本地笔记项目
 - 数据库：SQLite
 - 包管理器：npm
 
-## 如何运行
+## 环境要求
 
-待补充。当前阶段尚未初始化 Tauri 应用。
+- Node.js LTS
+- npm
+- Rust toolchain
+- Visual Studio C++ Build Tools
+- Microsoft Edge WebView2 Runtime
+
+## 本地开发
+
+安装依赖：
+
+```bash
+npm install
+```
+
+启动桌面开发模式：
+
+```bash
+npm run tauri dev
+```
+
+如果 PowerShell 因执行策略拦截 `npm.ps1`，可以改用：
+
+```powershell
+npm.cmd install
+npm.cmd run tauri dev
+```
