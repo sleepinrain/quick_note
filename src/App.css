@@ -25,107 +25,9 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
-}
-
-.app-shell {
-  min-height: 100vh;
-  padding: 56px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  background:
-    linear-gradient(135deg, rgba(47, 111, 113, 0.14), transparent 34%),
-    #f4f0e8;
-}
-
-.intro {
-  max-width: 640px;
-}
-
-h1 {
-  margin: 0;
-  font-size: 48px;
-  line-height: 1.05;
-  font-weight: 750;
-  color: #16212b;
-}
-
-.eyebrow {
-  margin: 0 0 12px;
-  color: #b05c3b;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.summary {
-  margin: 18px 0 0;
-  max-width: 560px;
-  color: #4f5d68;
-  font-size: 18px;
-}
-
-.status-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  max-width: 760px;
-}
-
-.status-card,
-.bridge-check {
-  border-radius: 8px;
-  border: 1px solid rgba(28, 36, 48, 0.12);
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 12px 32px rgba(28, 36, 48, 0.08);
-}
-
-.status-card {
-  min-height: 96px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.status-label {
-  color: #64717d;
-  font-size: 13px;
-}
-
-.status-card strong {
-  color: #1f4042;
-  font-size: 18px;
-}
-
-.bridge-check {
-  width: min(100%, 560px);
-  padding: 22px;
-}
-
-.bridge-check label {
-  display: block;
-  margin-bottom: 12px;
-  color: #2f3c47;
-  font-weight: 700;
-}
-
-.input-row {
-  display: flex;
-  gap: 10px;
-}
-
-input {
-  min-width: 0;
-  flex: 1;
-  border: 1px solid rgba(28, 36, 48, 0.18);
-  border-radius: 6px;
-  padding: 10px 12px;
-  color: #18232e;
-  background: #fffaf2;
 }
 
 button {
@@ -142,32 +44,204 @@ button:hover {
   background: #285f61;
 }
 
+input,
+textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(28, 36, 48, 0.18);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #18232e;
+  background: #fffaf2;
+}
+
+textarea {
+  min-height: 260px;
+  resize: vertical;
+}
+
 input:focus,
+textarea:focus,
 button:focus-visible {
   outline: 3px solid rgba(176, 92, 59, 0.28);
   outline-offset: 2px;
 }
 
-.result {
-  min-height: 24px;
-  margin: 16px 0 0;
+.app-shell {
+  min-height: 100vh;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  background:
+    linear-gradient(135deg, rgba(47, 111, 113, 0.14), transparent 34%),
+    #f4f0e8;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 34px;
+  line-height: 1.05;
+  font-weight: 750;
+  color: #16212b;
+}
+
+h2 {
+  color: #16212b;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+  color: #b05c3b;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.workspace {
+  min-height: 0;
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.note-list,
+.note-editor,
+.empty-state {
+  border-radius: 8px;
+  border: 1px solid rgba(28, 36, 48, 0.12);
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 12px 32px rgba(28, 36, 48, 0.08);
+}
+
+.note-list {
+  min-height: 420px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: auto;
+}
+
+.list-empty {
+  padding: 12px;
+  color: #64717d;
+}
+
+.note-list-item {
+  width: 100%;
+  min-height: 96px;
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+  border: 1px solid transparent;
+  color: #2c3844;
+  background: transparent;
+  text-align: left;
+}
+
+.note-list-item:hover,
+.note-list-item.active {
+  border-color: rgba(47, 111, 113, 0.24);
+  background: #fffaf2;
+}
+
+.note-list-item strong,
+.note-list-item span,
+.note-list-item small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note-list-item strong {
+  color: #16212b;
+}
+
+.note-list-item span,
+.note-list-item small {
+  color: #64717d;
+  font-weight: 500;
+}
+
+.note-editor {
+  min-width: 0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.danger-button {
+  background: #a94335;
+}
+
+.danger-button:hover {
+  background: #92382d;
+}
+
+.field-group {
+  display: grid;
+  gap: 8px;
+  color: #2f3c47;
+  font-weight: 700;
+}
+
+.empty-state {
+  min-height: 420px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 16px;
   color: #53616c;
 }
 
-@media (max-width: 720px) {
+.empty-state p:not(.eyebrow) {
+  max-width: 420px;
+}
+
+@media (max-width: 760px) {
   .app-shell {
-    padding: 32px 20px;
+    padding: 20px;
   }
 
-  h1 {
-    font-size: 40px;
+  .app-header {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
-  .status-grid {
+  .workspace {
     grid-template-columns: 1fr;
   }
 
-  .input-row {
-    flex-direction: column;
+  .note-list,
+  .empty-state {
+    min-height: 180px;
   }
 }
