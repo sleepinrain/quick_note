@@ -245,3 +245,26 @@ h2 {
     min-height: 180px;
   }
 }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.database-pill {
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #2f3c47;
+  background: rgba(255, 255, 255, 0.74);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.database-pill.ready {
+  color: #1f6042;
+}
+
+.database-pill.error {
+  color: #9d3327;
+}
