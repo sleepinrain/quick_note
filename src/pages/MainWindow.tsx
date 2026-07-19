@@ -3,9 +3,9 @@ import { EmptyState } from "../components/EmptyState";
 import { NoteEditor } from "../components/NoteEditor";
 import { NoteList } from "../components/NoteList";
 import type { Note } from "../types/note";
-import { getDatabase } from "../db/client";
+import { insertNote, listNotes } from "../db/notes";
 
-function createNote(): Note {
+function buildNewNote(): Note {
   const now = new Date().toISOString();
 
   return {
@@ -28,14 +28,16 @@ export function MainWindow() {
   useEffect(() => {
     let isMounted = true;
 
-    getDatabase()
-      .then(() => {
+    listNotes()
+      .then((storedNotes) => {
         if (isMounted) {
+          setNotes(storedNotes);
+          setSelectedNoteId(storedNotes[0]?.id ?? null);
           setDatabaseStatus("ready");
         }
       })
       .catch((error) => {
-        console.error("Failed to initialize database", error);
+        console.error("Failed to load notes", error);
 
         if (isMounted) {
           setDatabaseStatus("error");
@@ -52,11 +54,18 @@ export function MainWindow() {
     [notes, selectedNoteId],
   );
 
-  function handleCreateNote() {
-    const note = createNote();
+async function handleCreateNote() {
+  const note = buildNewNote();
+
+  try {
+    await insertNote(note);
     setNotes((currentNotes) => [note, ...currentNotes]);
     setSelectedNoteId(note.id);
+  } catch (error) {
+    console.error("Failed to create note", error);
+    setDatabaseStatus("error");
   }
+}
 
   function handleUpdateNote(updates: Pick<Note, "title" | "content" | "tags">) {
     if (!selectedNoteId) {
