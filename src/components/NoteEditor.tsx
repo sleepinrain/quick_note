@@ -5,12 +5,14 @@ type NoteEditorProps = {
   note: Note;
   onUpdateNote: (updates: Pick<Note, "title" | "content" | "tags">) => void;
   onDeleteNote: () => void;
+  onSaveNote: () => void;
 };
 
 export function NoteEditor({
   note,
   onUpdateNote,
   onDeleteNote,
+  onSaveNote,
 }: NoteEditorProps) {
   return (
     <section className="note-editor">
@@ -28,6 +30,7 @@ export function NoteEditor({
         <span>Title</span>
         <input
           value={note.title}
+          onBlur={onSaveNote}
           onChange={(event) =>
             onUpdateNote({
               title: event.currentTarget.value,
@@ -43,6 +46,7 @@ export function NoteEditor({
         <span>Content</span>
         <textarea
           value={note.content}
+          onBlur={onSaveNote}
           onChange={(event) =>
             onUpdateNote({
               title: note.title,

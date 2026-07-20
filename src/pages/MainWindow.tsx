@@ -3,7 +3,11 @@ import { EmptyState } from "../components/EmptyState";
 import { NoteEditor } from "../components/NoteEditor";
 import { NoteList } from "../components/NoteList";
 import type { Note } from "../types/note";
-import { insertNote, listNotes } from "../db/notes";
+import {
+  insertNote,
+  listNotes,
+  updateNote as updateStoredNote,
+} from "../db/notes";
 
 function buildNewNote(): Note {
   const now = new Date().toISOString();
@@ -54,18 +58,18 @@ export function MainWindow() {
     [notes, selectedNoteId],
   );
 
-async function handleCreateNote() {
-  const note = buildNewNote();
+  async function handleCreateNote() {
+    const note = buildNewNote();
 
-  try {
-    await insertNote(note);
-    setNotes((currentNotes) => [note, ...currentNotes]);
-    setSelectedNoteId(note.id);
-  } catch (error) {
-    console.error("Failed to create note", error);
-    setDatabaseStatus("error");
+    try {
+      await insertNote(note);
+      setNotes((currentNotes) => [note, ...currentNotes]);
+      setSelectedNoteId(note.id);
+    } catch (error) {
+      console.error("Failed to create note", error);
+      setDatabaseStatus("error");
+    }
   }
-}
 
   function handleUpdateNote(updates: Pick<Note, "title" | "content" | "tags">) {
     if (!selectedNoteId) {
@@ -83,6 +87,19 @@ async function handleCreateNote() {
           : note,
       ),
     );
+  }
+
+  async function handleSaveNote() {
+    if (!selectedNote) {
+      return;
+    }
+
+    try {
+      await updateStoredNote(selectedNote);
+    } catch (error) {
+      console.error("Failed to save note", error);
+      setDatabaseStatus("error");
+    }
   }
 
   function handleDeleteNote() {
@@ -126,6 +143,7 @@ async function handleCreateNote() {
           <NoteEditor
             note={selectedNote}
             onUpdateNote={handleUpdateNote}
+            onSaveNote={handleSaveNote}
             onDeleteNote={handleDeleteNote}
           />
         ) : (
