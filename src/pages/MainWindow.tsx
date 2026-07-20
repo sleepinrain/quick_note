@@ -4,6 +4,7 @@ import { NoteEditor } from "../components/NoteEditor";
 import { NoteList } from "../components/NoteList";
 import type { Note } from "../types/note";
 import {
+  deleteNote as deleteStoredNote,
   insertNote,
   listNotes,
   updateNote as updateStoredNote,
@@ -102,16 +103,23 @@ export function MainWindow() {
     }
   }
 
-  function handleDeleteNote() {
+  async function handleDeleteNote() {
     if (!selectedNoteId) {
       return;
     }
 
-    setNotes((currentNotes) => {
-      const nextNotes = currentNotes.filter((note) => note.id !== selectedNoteId);
+    const noteId = selectedNoteId;
+
+    try {
+      await deleteStoredNote(noteId);
+
+      const nextNotes = notes.filter((note) => note.id !== noteId);
+      setNotes(nextNotes);
       setSelectedNoteId(nextNotes[0]?.id ?? null);
-      return nextNotes;
-    });
+    } catch (error) {
+      console.error("Failed to delete note", error);
+      setDatabaseStatus("error");
+    }
   }
 
   return (
