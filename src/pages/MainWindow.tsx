@@ -103,6 +103,31 @@ export function MainWindow() {
     }
   }
 
+  async function handleSaveTags(tags: string[]) {
+    if (!selectedNote) {
+      return;
+    }
+
+    const noteToSave: Note = {
+      ...selectedNote,
+      tags,
+      updatedAt: new Date().toISOString(),
+    };
+
+    setNotes((currentNotes) =>
+      currentNotes.map((note) =>
+        note.id === noteToSave.id ? noteToSave : note,
+      ),
+    );
+
+    try {
+      await updateStoredNote(noteToSave);
+    } catch (error) {
+      console.error("Failed to save tags", error);
+      setDatabaseStatus("error");
+    }
+  }
+
   async function handleDeleteNote() {
     if (!selectedNoteId) {
       return;
@@ -153,6 +178,7 @@ export function MainWindow() {
             onUpdateNote={handleUpdateNote}
             onSaveNote={handleSaveNote}
             onDeleteNote={handleDeleteNote}
+            onSaveTags={handleSaveTags}
           />
         ) : (
           <EmptyState onCreateNote={handleCreateNote} />

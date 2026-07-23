@@ -6,6 +6,7 @@ type NoteEditorProps = {
   onUpdateNote: (updates: Pick<Note, "title" | "content" | "tags">) => void;
   onDeleteNote: () => void;
   onSaveNote: () => void;
+  onSaveTags: (tags: string[]) => void;
 };
 
 export function NoteEditor({
@@ -13,6 +14,7 @@ export function NoteEditor({
   onUpdateNote,
   onDeleteNote,
   onSaveNote,
+  onSaveTags,
 }: NoteEditorProps) {
   return (
     <section className="note-editor">
@@ -60,13 +62,7 @@ export function NoteEditor({
 
       <TagInput
         tags={note.tags}
-        onChange={(tags) =>
-          onUpdateNote({
-            title: note.title,
-            content: note.content,
-            tags,
-          })
-        }
+        onChange={onSaveTags}
       />
     </section>
   );
