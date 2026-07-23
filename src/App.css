@@ -268,3 +268,20 @@ h2 {
 .database-pill.error {
   color: #9d3327;
 }
+
+.search-input {
+  width: min(320px, 36vw);
+  background: #ffffff;
+}
+
+@media (max-width: 760px) {
+  .header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .search-input {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}

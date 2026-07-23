@@ -1,12 +1,13 @@
+import type { Note } from "../types/note";
+import { parseQuery } from "../search/parseQuery";
 import { useEffect, useMemo, useState } from "react";
 import { EmptyState } from "../components/EmptyState";
 import { NoteEditor } from "../components/NoteEditor";
 import { NoteList } from "../components/NoteList";
-import type { Note } from "../types/note";
 import {
   deleteNote as deleteStoredNote,
   insertNote,
-  listNotes,
+  searchNotes,
   updateNote as updateStoredNote,
 } from "../db/notes";
 
@@ -25,34 +26,43 @@ function buildNewNote(): Note {
 
 export function MainWindow() {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [searchValue, setSearchValue] = useState("");
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [databaseStatus, setDatabaseStatus] = useState<
     "loading" | "ready" | "error"
   >("loading");
 
   useEffect(() => {
-    let isMounted = true;
+    let isCurrent = true;
 
-    listNotes()
+    setDatabaseStatus("loading");
+
+    searchNotes(parseQuery(searchValue))
       .then((storedNotes) => {
-        if (isMounted) {
-          setNotes(storedNotes);
-          setSelectedNoteId(storedNotes[0]?.id ?? null);
-          setDatabaseStatus("ready");
+        if (!isCurrent) {
+          return;
         }
+
+        setNotes(storedNotes);
+        setSelectedNoteId((currentId) =>
+          storedNotes.some((note) => note.id === currentId)
+            ? currentId
+            : storedNotes[0]?.id ?? null,
+        );
+        setDatabaseStatus("ready");
       })
       .catch((error) => {
-        console.error("Failed to load notes", error);
+        console.error("Failed to search notes", error);
 
-        if (isMounted) {
+        if (isCurrent) {
           setDatabaseStatus("error");
         }
       });
 
     return () => {
-      isMounted = false;
+      isCurrent = false;
     };
-  }, []);
+  }, [searchValue]);
 
   const selectedNote = useMemo(
     () => notes.find((note) => note.id === selectedNoteId) ?? null,
@@ -151,10 +161,18 @@ export function MainWindow() {
     <main className="app-shell">
       <header className="app-header">
         <div>
-          <p className="eyebrow">Stage 4</p>
+          <p className="eyebrow">Stage 5</p>
           <h1>Quick Note</h1>
         </div>
         <div className="header-actions">
+          <input
+            className="search-input"
+            type="search"
+            aria-label="Search notes"
+            placeholder="Search notes or #tag"
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.currentTarget.value)}
+          />
           <span className={`database-pill ${databaseStatus}`}>
             SQLite: {databaseStatus}
           </span>

@@ -1,6 +1,7 @@
 import type { Note } from "../types/note";
 import { getDatabase } from "./client";
 import { replaceNoteTags } from "./tags";
+import type { ParsedQuery } from "../search/parseQuery";
 
 type NoteRow = {
   id: string;
@@ -22,25 +23,7 @@ function rowToNote(row: NoteRow): Note {
   };
 }
 
-export async function listNotes(): Promise<Note[]> {
-  const db = await getDatabase();
-
-  const rows = await db.select<NoteRow[]>(
-    `
-    SELECT
-      n.id,
-      n.title,
-      n.content,
-      n.created_at,
-      n.updated_at,
-      t.name AS tag_name
-    FROM notes AS n
-    LEFT JOIN note_tags AS nt ON nt.note_id = n.id
-    LEFT JOIN tags AS t ON t.id = nt.tag_id
-    ORDER BY n.updated_at DESC, t.name ASC
-    `,
-  );
-
+function rowsToNotes(rows: NoteRow[]): Note[] {
   const notesById = new Map<string, Note>();
 
   for (const row of rows) {
@@ -57,6 +40,67 @@ export async function listNotes(): Promise<Note[]> {
   }
 
   return [...notesById.values()];
+}
+
+async function selectNotes(
+  whereClause = "",
+  bindValues: unknown[] = [],
+): Promise<Note[]> {
+  const db = await getDatabase();
+
+  const rows = await db.select<NoteRow[]>(
+    `
+    SELECT
+      n.id,
+      n.title,
+      n.content,
+      n.created_at,
+      n.updated_at,
+      t.name AS tag_name
+    FROM notes AS n
+    LEFT JOIN note_tags AS nt ON nt.note_id = n.id
+    LEFT JOIN tags AS t ON t.id = nt.tag_id
+    ${whereClause}
+    ORDER BY n.updated_at DESC, t.name ASC
+    `,
+    bindValues,
+  );
+
+  return rowsToNotes(rows);
+}
+
+export function listNotes(): Promise<Note[]> {
+  return selectNotes();
+}
+
+export function searchNotes(query: ParsedQuery): Promise<Note[]> {
+  switch (query.type) {
+    case "recent":
+      return listNotes();
+
+    case "tag":
+      return selectNotes(
+        `
+        WHERE EXISTS (
+          SELECT 1
+          FROM note_tags AS search_nt
+          INNER JOIN tags AS search_t ON search_t.id = search_nt.tag_id
+          WHERE search_nt.note_id = n.id
+            AND search_t.name = $1
+        )
+        `,
+        [query.value],
+      );
+
+    case "text":
+      return selectNotes(
+        `
+        WHERE n.title LIKE $1
+           OR n.content LIKE $1
+        `,
+        [`%${query.value}%`],
+      );
+  }
 }
 
 export async function insertNote(note: Note): Promise<void> {
