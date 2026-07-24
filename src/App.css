@@ -285,3 +285,15 @@ h2 {
     flex: 1 1 100%;
   }
 }
+
+.app-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.app-version {
+  color: #64717d;
+  font-size: 13px;
+  font-weight: 700;
+}

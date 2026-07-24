@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { EmptyState } from "../components/EmptyState";
 import { NoteEditor } from "../components/NoteEditor";
 import { NoteList } from "../components/NoteList";
+import { getAppInfo, type AppInfo } from "../tauri/appInfo";
 import {
   deleteNote as deleteStoredNote,
   insertNote,
@@ -31,6 +32,7 @@ export function MainWindow() {
   const [databaseStatus, setDatabaseStatus] = useState<
     "loading" | "ready" | "error"
   >("loading");
+  const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
 
   useEffect(() => {
     let isCurrent = true;
@@ -63,6 +65,14 @@ export function MainWindow() {
       isCurrent = false;
     };
   }, [searchValue]);
+
+  useEffect(() => {
+    getAppInfo()
+      .then(setAppInfo)
+      .catch((error) => {
+        console.error("Failed to load app info", error);
+      });
+  }, []);
 
   const selectedNote = useMemo(
     () => notes.find((note) => note.id === selectedNoteId) ?? null,
@@ -161,8 +171,13 @@ export function MainWindow() {
     <main className="app-shell">
       <header className="app-header">
         <div>
-          <p className="eyebrow">Stage 5</p>
-          <h1>Quick Note</h1>
+          <p className="eyebrow">Stage 6</p>
+          <div className="app-title">
+            <h1>{appInfo?.name ?? "Quick Note"}</h1>
+            {appInfo ? (
+              <span className="app-version">v{appInfo.version}</span>
+            ) : null}
+          </div>
         </div>
         <div className="header-actions">
           <input
