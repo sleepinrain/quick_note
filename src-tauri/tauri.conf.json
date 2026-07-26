@@ -12,9 +12,30 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "Quick Note",
         "width": 800,
         "height": 600
+      },
+      {
+        "label": "quick-search",
+        "title": "Quick Search",
+        "width": 560,
+        "height": 360,
+        "visible": false,
+        "decorations": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "resizable": false,
+        "center": true
+      },
+      {
+        "label": "note-preview",
+        "title": "Note Preview",
+        "width": 560,
+        "height": 640,
+        "visible": false,
+        "center": true
       }
     ],
     "security": {

@@ -5,6 +5,7 @@ import { EmptyState } from "../components/EmptyState";
 import { NoteEditor } from "../components/NoteEditor";
 import { NoteList } from "../components/NoteList";
 import { getAppInfo, type AppInfo } from "../tauri/appInfo";
+import { showQuickSearchWindow } from "../tauri/windows";
 import {
   deleteNote as deleteStoredNote,
   insertNote,
@@ -195,6 +196,9 @@ export function MainWindow() {
           <button type="button" onClick={handleCreateNote}>
             New note
           </button>
+          <button type="button" onClick={handleOpenQuickSearch}>
+            Quick search
+          </button>
         </div>
       </header>
 
@@ -219,4 +223,12 @@ export function MainWindow() {
       </section>
     </main>
   );
+}
+
+async function handleOpenQuickSearch() {
+  try {
+    await showQuickSearchWindow();
+  } catch (error) {
+    console.error("Failed to open quick search", error);
+  }
 }

@@ -297,3 +297,43 @@ h2 {
   font-size: 13px;
   font-weight: 700;
 }
+
+.quick-search-shell {
+  min-height: 100vh;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #f4f0e8;
+}
+
+.note-preview-shell {
+  min-height: 100vh;
+  padding: 16px;
+  background: #f4f0e8;
+}
+
+.quick-search-toolbar {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #2f3c47;
+}
+
+.window-close-button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: #53616c;
+  background: transparent;
+}
+
+.window-close-button:hover {
+  background: rgba(28, 36, 48, 0.08);
+}
+
+.preview-empty {
+  color: #64717d;
+}
